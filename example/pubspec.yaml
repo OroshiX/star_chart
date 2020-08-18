@@ -1,0 +1,14 @@
+name: star_chart_example
+description: An example project for the star chart project
+
+dependencies:
+  flutter:
+    sdk: flutter
+  star_chart:
+    path: ../
+flutter:
+  uses-material-design: true
+  assets:
+# - assets/images/toto.png
+#  fonts:
+#    - family:
