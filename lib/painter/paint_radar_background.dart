@@ -12,11 +12,20 @@ class PaintRadarBackground extends CustomPainter {
     ..color = Colors.black54
     ..strokeWidth = 1
     ..style = PaintingStyle.stroke;
+  final Paint paintAxes = Paint()
+    ..color = Colors.black54
+    ..strokeWidth = 1
+    ..style = PaintingStyle.stroke;
   final bool drawLinesInside;
   final List<double> xs, ys;
   final double initialAngle;
+  final bool drawAxes;
+  final bool drawBackground;
   PaintRadarBackground(this.n,
-      {this.initialAngle = pi / 2, this.drawLinesInside = false})
+      {this.initialAngle = pi / 2,
+      this.drawLinesInside = false,
+      this.drawBackground = true,
+      this.drawAxes = false})
       : xs = [1],
         ys = [0] {
     for (var k = 1; k < n; k++) {
@@ -27,19 +36,26 @@ class PaintRadarBackground extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var r = min(size.width, size.height) / 2;
+    final o = Offset(r, r);
     Path path = Path();
-    path.moveTo(r * xs.first, r * ys.first);
-    for (var k = 1; k < n; k++) {
-      path.lineTo(r * xs[k], r * ys[k]);
+    for (var k = 0; k < n; k++) {
+      if (k == 0) {
+        path.moveTo(r * xs[k], r * ys[k]);
+      } else {
+        path.lineTo(r * xs[k], r * ys[k]);
+      }
       var textSpan =
           TextSpan(text: "$k", style: TextStyle(color: Colors.blueGrey));
       var textPainter =
           TextPainter(text: textSpan, textDirection: TextDirection.ltr);
       textPainter.layout();
       textPainter.paint(canvas, Offset(r * xs[k], r * ys[k]));
+      if (drawAxes) {
+        canvas.drawLine(Offset(r * xs[k], r * ys[k]), o, paintAxes);
+      }
     }
     path.close();
-    canvas.drawPath(path, painter);
+    if (drawBackground) canvas.drawPath(path, painter);
     if (drawLinesInside) {
       for (var k = 0; k < n - 1; k++) {
         for (var j = k + 2; j <= n - 1; j++) {

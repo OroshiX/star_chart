@@ -27,7 +27,7 @@ class PaintRadarLabels extends CustomPainter {
     for (int k = 0; k < labels.length; k++) {
       double alpha = 2 * k * pi / n;
       var textSpan = TextSpan(
-        text: labels[k] + " (2*$kπ/$n)",
+        text: labels[k],// + " (2*$kπ/$n)",
         style: TextStyle(color: color),
       );
       final textPainter = TextPainter(
@@ -45,7 +45,7 @@ class PaintRadarLabels extends CustomPainter {
 //        alpha = alpha - 2 * pi;
       }
       // if alpha is above the middle of the rectangle: (alpha not between [-pi/2 ; pi/2])
-      if (alpha >= pi / 2 || alpha <= -pi / 2) {
+      if (alpha > pi / 2 || alpha < -pi / 2) {
         alpha = alpha - pi;
       }
       // Calculate distance inside rectangle (distInRect)

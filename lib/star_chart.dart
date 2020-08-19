@@ -46,9 +46,19 @@ class StarChart extends StatelessWidget {
                     heightFactor: 1,
                     widthFactor: 1,
                     child: CustomPaint(
+                      painter: PaintRadarBackground(sides,
+                          drawAxes: true, drawBackground: false),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: FractionallySizedBox(
+                    heightFactor: 1,
+                    widthFactor: 1,
+                    child: CustomPaint(
                       painter: PaintRadarLabels(
                         sideLength * _percent.first / 2,
-                        List.generate(sides, (index) => "$index"),
+                        List.generate(sides, (index) => "No. $index"),
                         color: labelColor,
                       ),
                     ),
