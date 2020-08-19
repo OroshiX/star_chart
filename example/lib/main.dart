@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:star_chart/star_chart.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class RadarScreen extends StatefulWidget {
   static const routeName = "/radar";
   final List<double> values;
@@ -53,57 +55,14 @@ class _RadarScreenState extends State<RadarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Star chart"),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LayoutBuilder(
-              builder: (context, constraints) {
-                double sideLength =
-                min(constraints.maxHeight, constraints.maxWidth);
-                return Center(
-                  child: Container(
-                    color: Colors.red,
-                    width: sideLength,
-                    height: sideLength,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: FractionallySizedBox(
-                            heightFactor: 1,
-                            widthFactor: 1,
-                            alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: PaintRadarBackground(_sides),
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: FractionallySizedBox(
-                            heightFactor: 0.6,
-                            widthFactor: 0.6,
-                            alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: PaintRadarBackground(_sides),
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: FractionallySizedBox(
-                            alignment: Alignment.center,
-                            heightFactor: 0.3,
-                            widthFactor: 0.3,
-                            child: CustomPaint(
-                              painter: PaintRadarBackground(_sides),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+            StarChart(sides: _sides),
             Slider(
               value: _sides.toDouble(),
               onChanged: (value) {
@@ -122,4 +81,3 @@ class _RadarScreenState extends State<RadarScreen> {
     );
   }
 }
-
