@@ -14,8 +14,8 @@ class PaintRadarLabels extends CustomPainter {
   PaintRadarLabels(
     this.r,
     this.labels, {
-    this.magnitude = 15,
-    this.miniOutsideRectangle = 5,
+    this.magnitude = 20,
+    this.miniOutsideRectangle = 2,
     this.color = Colors.black,
     this.initialAngle = pi / 2,
   }) : this.n = labels.length;
@@ -25,9 +25,10 @@ class PaintRadarLabels extends CustomPainter {
     Path path = Path();
 
     for (int k = 0; k < labels.length; k++) {
-      double alpha = 2 * k * pi / n;
+      double omega = 2 * k * pi / n;
+      double alpha = omega;
       var textSpan = TextSpan(
-        text: labels[k],// + " (2*$kπ/$n)",
+        text: labels[k], // + " (2*$kπ/$n)",
         style: TextStyle(color: color),
       );
       final textPainter = TextPainter(
@@ -42,7 +43,7 @@ class PaintRadarLabels extends CustomPainter {
       var distOutRect =
           miniOutsideRectangle + (magnitude / 2) * (1 - cos(4 * alpha));
       if (alpha > 3 * pi / 2) {
-//        alpha = alpha - 2 * pi;
+        alpha = alpha - 2 * pi;
       }
       // if alpha is above the middle of the rectangle: (alpha not between [-pi/2 ; pi/2])
       if (alpha > pi / 2 || alpha < -pi / 2) {
@@ -52,14 +53,14 @@ class PaintRadarLabels extends CustomPainter {
       double distInRect;
       if (alpha.abs() < atan2(L, l)) {
         // if the incidence point is in the width of the text rectangle (L)
-        distInRect = l / (2 * cos(alpha));
+        distInRect = (l / (2 * cos(alpha))).abs();
       } else {
         // The incidence point is in the height of the text rectangle (l)
-        distInRect = L / (2 * sin(alpha));
+        distInRect = (L / (2 * sin(alpha))).abs();
       }
       final rho = r + distOutRect + distInRect;
-      final offset = Offset(size.width / 2 + rho * cos(alpha + initialAngle),
-          size.height / 2 + rho * sin(alpha + initialAngle));
+      final offset = Offset(size.width / 2 + rho * cos(omega - initialAngle),
+          size.height / 2 + rho * sin(omega- initialAngle));
       canvas.drawRect(Rect.fromCenter(center: offset, height: l, width: L),
           Paint()..color = Colors.black12);
       if (k == 0) {
