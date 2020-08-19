@@ -5,15 +5,12 @@ import 'package:flutter/rendering.dart';
 
 class PaintRadarBackground extends CustomPainter {
   final int n;
-  final Paint painter = Paint()
-    ..color = Colors.amber.withOpacity(0.5)
-    ..style = PaintingStyle.fill;
+  final Paint painter = Paint()..style = PaintingStyle.fill;
   final Paint paintLines = Paint()
     ..color = Colors.black54
     ..strokeWidth = 1
     ..style = PaintingStyle.stroke;
   final Paint paintAxes = Paint()
-    ..color = Colors.black54
     ..strokeWidth = 1
     ..style = PaintingStyle.stroke;
   final bool drawLinesInside;
@@ -21,17 +18,23 @@ class PaintRadarBackground extends CustomPainter {
   final double initialAngle;
   final bool drawAxes;
   final bool drawBackground;
+  final Color backgroundColor;
+  final Color axisColor;
   PaintRadarBackground(this.n,
       {this.initialAngle = pi / 2,
       this.drawLinesInside = false,
       this.drawBackground = true,
-      this.drawAxes = false})
+      this.drawAxes = false,
+      this.backgroundColor = Colors.black12,
+      this.axisColor = Colors.black12})
       : xs = [1],
         ys = [0] {
     for (var k = 1; k < n; k++) {
       xs.add(1 + cos(2 * k * pi / n - initialAngle));
       ys.add(1 + sin(2 * k * pi / n - initialAngle));
     }
+    painter..color = backgroundColor;
+    paintAxes..color = axisColor;
   }
   @override
   void paint(Canvas canvas, Size size) {
@@ -44,12 +47,6 @@ class PaintRadarBackground extends CustomPainter {
       } else {
         path.lineTo(r * xs[k], r * ys[k]);
       }
-      var textSpan =
-          TextSpan(text: "$k", style: TextStyle(color: Colors.blueGrey));
-      var textPainter =
-          TextPainter(text: textSpan, textDirection: TextDirection.ltr);
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(r * xs[k], r * ys[k]));
       if (drawAxes) {
         canvas.drawLine(Offset(r * xs[k], r * ys[k]), o, paintAxes);
       }

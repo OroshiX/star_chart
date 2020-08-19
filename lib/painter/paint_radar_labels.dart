@@ -22,8 +22,6 @@ class PaintRadarLabels extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = Path();
-
     for (int k = 0; k < labels.length; k++) {
       double omega = 2 * k * pi / n;
       double alpha = omega;
@@ -63,20 +61,8 @@ class PaintRadarLabels extends CustomPainter {
           size.height / 2 + rho * sin(omega- initialAngle));
       canvas.drawRect(Rect.fromCenter(center: offset, height: l, width: L),
           Paint()..color = Colors.black12);
-      if (k == 0) {
-        canvas.drawCircle(offset, 6, Paint()..color = Colors.blue);
-        path.moveTo(offset.dx, offset.dy);
-      } else {
-        path.lineTo(offset.dx, offset.dy);
-      }
       textPainter.paint(canvas, offset + Offset(-L / 2, -l / 2));
     }
-    canvas.drawPath(
-        path,
-        Paint()
-          ..color = color.withOpacity(0.5)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2);
   }
 
   @override
