@@ -6,15 +6,17 @@ import 'package:flutter/rendering.dart';
 class PaintRadarBackground extends CustomPainter {
   final int n;
   final Paint painter = Paint()
-    ..color = Colors.amber
+    ..color = Colors.amber.withOpacity(0.5)
     ..style = PaintingStyle.fill;
   final Paint paintLines = Paint()
     ..color = Colors.black54
     ..strokeWidth = 1
     ..style = PaintingStyle.stroke;
+  final bool drawLinesInside;
   final List<double> xs, ys;
   final double initialAngle;
-  PaintRadarBackground(this.n, {this.initialAngle = pi / 2})
+  PaintRadarBackground(this.n,
+      {this.initialAngle = pi / 2, this.drawLinesInside = false})
       : xs = [1],
         ys = [0] {
     for (var k = 1; k < n; k++) {
@@ -29,14 +31,22 @@ class PaintRadarBackground extends CustomPainter {
     path.moveTo(r * xs.first, r * ys.first);
     for (var k = 1; k < n; k++) {
       path.lineTo(r * xs[k], r * ys[k]);
+      var textSpan =
+          TextSpan(text: "$k", style: TextStyle(color: Colors.blueGrey));
+      var textPainter =
+          TextPainter(text: textSpan, textDirection: TextDirection.ltr);
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(r * xs[k], r * ys[k]));
     }
     path.close();
     canvas.drawPath(path, painter);
-    for (var k = 0; k < n - 1; k++) {
-      for (var j = k + 2; j <= n - 1; j++) {
-        if (k == 0 && j == n - 1) continue;
-        canvas.drawLine(Offset(r * xs[k], r * ys[k]),
-            Offset(r * xs[j], r * ys[j]), paintLines);
+    if (drawLinesInside) {
+      for (var k = 0; k < n - 1; k++) {
+        for (var j = k + 2; j <= n - 1; j++) {
+          if (k == 0 && j == n - 1) continue;
+          canvas.drawLine(Offset(r * xs[k], r * ys[k]),
+              Offset(r * xs[j], r * ys[j]), paintLines);
+        }
       }
     }
   }

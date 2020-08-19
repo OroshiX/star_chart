@@ -62,7 +62,7 @@ class _RadarScreenState extends State<RadarScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            StarChart(sides: _sides),
+            StarChart(sides: _sides, percent: [0.1,0.3,0.6],),
             Slider(
               value: _sides.toDouble(),
               onChanged: (value) {

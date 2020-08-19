@@ -8,8 +8,16 @@ import 'package:star_chart/painter/paint_radar_labels.dart';
 
 class StarChart extends StatelessWidget {
   final int sides;
+  final Iterable<double> _percent;
+  final Color labelColor;
 
-  const StarChart({Key key, this.sides}) : super(key: key);
+  StarChart(
+      {Key key,
+      this.sides,
+      List<double> percent,
+      this.labelColor = Colors.black})
+      : _percent = ((percent ?? [0.9, 0.6, 0.3])..sort()).reversed,
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -22,43 +30,27 @@ class StarChart extends StatelessWidget {
             height: sideLength,
             child: Stack(
               children: [
+                for (var p in _percent)
+                  Center(
+                    child: FractionallySizedBox(
+                      heightFactor: p,
+                      widthFactor: p,
+                      alignment: Alignment.center,
+                      child: CustomPaint(
+                        painter: PaintRadarBackground(sides),
+                      ),
+                    ),
+                  ),
                 Center(
                   child: FractionallySizedBox(
                     heightFactor: 1,
                     widthFactor: 1,
                     child: CustomPaint(
-                      painter: PaintRadarLabels(sideLength,
-                          List.generate(sides, (index) => "label $index")),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.9,
-                    widthFactor: 0.9,
-                    alignment: Alignment.center,
-                    child: CustomPaint(
-                      painter: PaintRadarBackground(sides),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.6,
-                    widthFactor: 0.6,
-                    alignment: Alignment.center,
-                    child: CustomPaint(
-                      painter: PaintRadarBackground(sides),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: FractionallySizedBox(
-                    alignment: Alignment.center,
-                    heightFactor: 0.3,
-                    widthFactor: 0.3,
-                    child: CustomPaint(
-                      painter: PaintRadarBackground(sides),
+                      painter: PaintRadarLabels(
+                        sideLength * _percent.first / 2,
+                        List.generate(sides, (index) => "$index"),
+                        color: labelColor,
+                      ),
                     ),
                   ),
                 ),
